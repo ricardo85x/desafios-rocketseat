@@ -1,0 +1,19 @@
+.postlist {
+    display: grid;
+    flex-direction: row;
+    align-content: center;
+    height: 100%;
+    color: black;
+    grid-template-columns:  1fr 8fr 1fr;
+    justify-items: center;
+    justify-content: center;
+    
+
+}
+
+.postlist .container {
+    grid-column-start: 2;
+    background-color: rgb(201, 201, 201);
+
+
+}
