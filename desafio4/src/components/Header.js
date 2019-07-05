@@ -7,7 +7,7 @@ function Header() {
     return (
         <div className="header">
 
-            <div className="facebookLogo">FaceBook</div>
+            <div className="facebookLogo">FakeBook</div>
             <div className="perfil">Meu perfil</div>
 
         </div>

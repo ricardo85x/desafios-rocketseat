@@ -4,16 +4,26 @@
     align-content: center;
     height: 100%;
     color: black;
-    grid-template-columns:  1fr 8fr 1fr;
+    grid-template-columns:  1fr;
     justify-items: center;
     justify-content: center;
+    width: 100%;
     
-
 }
 
 .postlist .container {
-    grid-column-start: 2;
-    background-color: rgb(201, 201, 201);
+  
+    padding: 20px;
+    grid-column-start: 1;
+   
 
 
+}
+
+body {
+    background-color: rgba(238, 238, 238, 0.473);
+}
+
+:root {
+    font-size: 1em;
 }

@@ -1,0 +1,26 @@
+.comment_item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    margin-top: 10px;
+}
+
+.comment_item .comment_avatar {
+    padding-left: 80px;
+
+    grid-column-start: 1;
+}
+
+.comment_item .comment_msg {
+    padding-left: 80px;
+    padding-right: 20px;
+
+    grid-column-start: 2;
+
+
+}
+
+
+.comment_item .comment_msg .comment_user {
+    font-weight: bold;
+    
+}
