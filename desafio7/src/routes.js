@@ -14,7 +14,7 @@ const Routes = createAppContainer(
             headerBackTitleVisible: 'false', // esconder o voltar do IOS
             defaultNavigationOptions: {
                 headerStyle: {
-                    backgroundColor: '#7159c1',
+                    backgroundColor: 'black',
                 },
                 headerTintColor: '#fff',
             },

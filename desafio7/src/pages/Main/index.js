@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
+import IconBadge from 'react-native-icon-badge';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Text } from 'react-native';
 
 import api from '../../services/api';
 import {
     Container,
+    HearderTitle,
+    HeaderArea,
+    Logo,
+    BasketContainerButton,
+    BasketIcon,
     ProductFlatList,
     ProductContainer,
     ProductImage,
@@ -39,6 +46,27 @@ export default function Main(props) {
 
     return (
         <Container>
+            <HeaderArea>
+                <HearderTitle>ROCKETSHOES</HearderTitle>
+                <Logo name="shoe-formal" size={30} color="#ffff" />
+                <BasketContainerButton>
+                    <IconBadge
+                        MainElement={
+                            <BasketIcon name="basket" size={35} color="#ffff" />
+                        }
+                        BadgeElement={
+                            <Text style={{ color: '#ffff', fontSize: 10 }}>
+                                2
+                            </Text>
+                        }
+                        IconBadgeStyle={{
+                            width: 20,
+                            height: 20,
+                            backgroundColor: 'red',
+                        }}
+                    />
+                </BasketContainerButton>
+            </HeaderArea>
             <ProductFlatList
                 showsHorizontalScrollIndicator={false}
                 horizontal
@@ -50,7 +78,7 @@ export default function Main(props) {
                         <ProductDescription>{item.title}</ProductDescription>
                         <ProductPrice>{item.price}</ProductPrice>
                         <ButtonArea onPress={() => handleAddBasket(item)}>
-                            <Icon name="cart-plus" size={10} color="#FFF" />
+                            <Icon name="cart-plus" size={20} color="#FFF" />
                             <ProductQuantity>10</ProductQuantity>
                             <ButtonText>ADICIONAR</ButtonText>
                         </ButtonArea>
