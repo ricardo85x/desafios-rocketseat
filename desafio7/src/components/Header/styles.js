@@ -9,6 +9,7 @@ export const ContainerBackButton = styled(RectButton)`
     align-items: center;
     background-color: black;
     padding: 0 10px;
+    height: 100px;
 `;
 
 export const HearderTitle = styled.Text`

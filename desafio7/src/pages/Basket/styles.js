@@ -40,11 +40,10 @@ export const BodyContainer = styled.View`
     background-color: #ffff;
     padding: 5px;
     border-radius: 5px;
+    flex: 1;
 `;
 
-export const BasketList = styled(FlatList)`
-    max-height: 400px;
-`;
+export const BasketList = styled(FlatList)``;
 
 export const TopContainer = styled.View`
     display: flex;
@@ -102,6 +101,10 @@ export const PriceQtd = styled.Text`
     margin-right: 10px;
     font-size: 20px;
     font-weight: bold;
+`;
+
+export const FooterContainer = styled.View`
+    flex: 0 0 150px;
 `;
 
 export const TotalText = styled.Text`

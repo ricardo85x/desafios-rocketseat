@@ -24,6 +24,7 @@ import {
     BotaoFinalizar,
     BotaoText,
     BodyContainer,
+    FooterContainer,
 } from './styles';
 
 export default function Basket() {
@@ -117,13 +118,15 @@ export default function Basket() {
                         </>
                     )}
                 />
+            </BodyContainer>
 
+            <FooterContainer>
                 <TotalText>TOTAL</TotalText>
                 <PriceTotal>999 reais</PriceTotal>
                 <BotaoFinalizar>
                     <BotaoText>FINALIZAR PEDIDO</BotaoText>
                 </BotaoFinalizar>
-            </BodyContainer>
+            </FooterContainer>
         </Container>
     );
 }
