@@ -1,23 +1,18 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
-import IconBadge from 'react-native-icon-badge';
-import { Text } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import * as CartActions from '../../store/modules/basket/actions';
 
 import {
     Container,
-    HeaderArea,
-    HearderTitle,
-    Logo,
-    BasketContainerButton,
-    BasketIcon,
     BasketList,
     TopContainer,
     ImagemProduct,
     DescContainer,
     ProductDescription,
     PriceDesc,
-    DeleteProductContainer,
+    DeleteProductButton,
     Trash,
     QtdContainer,
     RemoveIcon,
@@ -32,53 +27,46 @@ import {
 } from './styles';
 
 export default function Basket() {
+    const dispatch = useDispatch();
+
+    const handleDeleteProduct = id => {
+        dispatch(CartActions.removeFromBasket(id));
+    };
+
+    const basket = useSelector(state => state.basket);
+
+    const handleUpdate = (action, product) => {
+        if (action === 'ADD') {
+            dispatch(CartActions.updateAmount(product.id, product.amount + 1));
+        } else {
+            dispatch(CartActions.updateAmount(product.id, product.amount - 1));
+        }
+    };
+
     return (
         <Container>
-            <HeaderArea>
-                <HearderTitle>ROCKETSHOES</HearderTitle>
-                <Logo name="shoe-formal" size={30} color="#ffff" />
-                <BasketContainerButton>
-                    <IconBadge
-                        MainElement={
-                            <BasketIcon name="basket" size={35} color="#ffff" />
-                        }
-                        BadgeElement={
-                            <Text style={{ color: '#ffff', fontSize: 10 }}>
-                                2
-                            </Text>
-                        }
-                        IconBadgeStyle={{
-                            width: 20,
-                            height: 20,
-                            backgroundColor: 'red',
-                        }}
-                    />
-                </BasketContainerButton>
-            </HeaderArea>
             <BodyContainer>
                 <BasketList
-                    showsVerticalScrollIndicator={false}
-                    data={[
-                        { id: 1, name: 'tenis' },
-                        { id: 3, name: 'tenis 2' },
-                    ]}
+                    showsVerticalScrollIndicator
+                    data={basket}
                     keyExtractor={item => String(item.id)}
                     renderItem={({ item }) => (
                         <>
                             <TopContainer>
                                 <ImagemProduct
                                     source={{
-                                        uri:
-                                            'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
+                                        uri: `${item.image}`,
                                     }}
                                 />
                                 <DescContainer>
                                     <ProductDescription>
-                                        {item.name}
+                                        {item.title}
                                     </ProductDescription>
-                                    <PriceDesc>10 reais</PriceDesc>
+                                    <PriceDesc>{item.formatedPrice}</PriceDesc>
                                 </DescContainer>
-                                <DeleteProductContainer>
+                                <DeleteProductButton
+                                    onPress={() => handleDeleteProduct(item.id)}
+                                >
                                     <Trash
                                         type="clear"
                                         icon={
@@ -89,10 +77,11 @@ export default function Basket() {
                                             />
                                         }
                                     />
-                                </DeleteProductContainer>
+                                </DeleteProductButton>
                             </TopContainer>
                             <QtdContainer>
                                 <RemoveIcon
+                                    onPress={() => handleUpdate('REMOVE', item)}
                                     type="clear"
                                     icon={
                                         <Icon
@@ -109,8 +98,11 @@ export default function Basket() {
                                         borderRadius: 3,
                                         backgroundColor: 'white',
                                     }}
-                                />
+                                >
+                                    {item.amount}
+                                </QtdInput>
                                 <AddIcon
+                                    onPress={() => handleUpdate('ADD', item)}
                                     type="clear"
                                     icon={
                                         <Icon2
@@ -135,33 +127,3 @@ export default function Basket() {
         </Container>
     );
 }
-
-/*
-
-
-export const Botao = styled(RectButton)``;
-
-export const BotaoText = styled.Text``;
-
-export const ImagemProduct = styled.Image``;
-
-export const ProductDescription = styled.Text``;
-
-export const PriceDesc = styled.Text``;
-
-export const Trash = styled(Icon)``;
-
-export const QtdContainer = styled.View``;
-
-export const RemoveIcon = styled(Icon)``;
-
-export const AddIcon = styled(Icon)``;
-
-export const QtdInput = styled.TextInput``;
-
-export const PriceQtd = styled.Text``;
-
-export const TotalText = styled.Text``;
-export const PriceTotal = styled.Text``;
-
-*/

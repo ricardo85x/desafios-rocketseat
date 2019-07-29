@@ -33,8 +33,8 @@ export const BasketContainerButton = styled(RectButton)`
 export const BasketIcon = styled(Icon)``;
 
 export const BodyContainer = styled.View`
-    background-color: #ffff;
-    padding: 5px;
+    background-color: pink;
+    padding: 0 5px 5px 5px;
     border-radius: 5px;
 `;
 

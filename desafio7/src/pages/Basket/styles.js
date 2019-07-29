@@ -9,6 +9,7 @@ import { FlatList } from 'react-native';
 export const Container = styled.View`
     background-color: black;
     flex: 1;
+    padding: 0px 10px;
 `;
 
 export const HeaderArea = styled.View`
@@ -41,7 +42,9 @@ export const BodyContainer = styled.View`
     border-radius: 5px;
 `;
 
-export const BasketList = styled(FlatList)``;
+export const BasketList = styled(FlatList)`
+    max-height: 400px;
+`;
 
 export const TopContainer = styled.View`
     display: flex;
@@ -67,7 +70,7 @@ export const PriceDesc = styled.Text`
     padding-left: 3px;
 `;
 
-export const DeleteProductContainer = styled(RectButton)`
+export const DeleteProductButton = styled(RectButton)`
     margin-left: auto;
     margin-right: 5px;
 `;
