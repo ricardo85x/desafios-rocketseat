@@ -12,6 +12,17 @@ export const Container = styled.View`
     padding: 0px 10px;
 `;
 
+export const MainContainer = styled.View`
+    background-color: #ffff;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+
+    min-height: 300px;
+    flex: 1;
+    margin-bottom: 20px;
+`;
+
 export const HeaderArea = styled.View`
     display: flex;
     flex-direction: row;
@@ -37,10 +48,11 @@ export const BasketContainerButton = styled(RectButton)`
 export const BasketIcon = styled(Icon)``;
 
 export const BodyContainer = styled.View`
-    background-color: #ffff;
-    padding: 5px;
-    border-radius: 5px;
+    /* background-color: #ffff; */
+    /* padding: 5px;
+    border-radius: 5px; */
     flex: 1;
+    margin-top: auto;
 `;
 
 export const BasketList = styled(FlatList)``;

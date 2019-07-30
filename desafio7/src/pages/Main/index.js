@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as CartActions from '../../store/modules/basket/actions';
@@ -24,6 +24,14 @@ import {
 
 function Main(props) {
     const [products, setProducts] = useState([]);
+
+    const amount = useSelector(state => id => {
+        const product = state.basket.findIndex(p => p.id === id);
+        if (product >= 0) {
+            return state.basket[product].amount;
+        }
+        return 0;
+    });
 
     useEffect(() => {
         async function loadProducts() {
@@ -65,7 +73,7 @@ function Main(props) {
                         <ProductPrice>{item.formatedPrice}</ProductPrice>
                         <ButtonArea onPress={() => handleAddBasket(item)}>
                             <Icon name="cart-plus" size={20} color="#FFF" />
-                            <ProductQuantity>10</ProductQuantity>
+                            <ProductQuantity>{amount(item.id)}</ProductQuantity>
                             <ButtonText>ADICIONAR</ButtonText>
                         </ButtonArea>
                     </ProductContainer>
