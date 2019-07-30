@@ -22,7 +22,7 @@ import {
     ButtonText,
 } from './styles';
 
-function Main(props) {
+function Main() {
     const [products, setProducts] = useState([]);
 
     const amount = useSelector(state => id => {
@@ -51,12 +51,12 @@ function Main(props) {
 
     const dispatch = useDispatch();
 
-    const handleAddBasket = item => {
-        const { navigation } = props;
+    const handleAddBasket = id => {
+        // const { navigation } = props;
 
-        dispatch(CartActions.addToBasket(item));
+        dispatch(CartActions.addToBasketRequest(id));
 
-        navigation.navigate('Basket', { item });
+        // navigation.navigate('Basket', { item });
     };
 
     return (
@@ -71,7 +71,7 @@ function Main(props) {
                         <ProductImage source={{ uri: item.image }} />
                         <ProductDescription>{item.title}</ProductDescription>
                         <ProductPrice>{item.formatedPrice}</ProductPrice>
-                        <ButtonArea onPress={() => handleAddBasket(item)}>
+                        <ButtonArea onPress={() => handleAddBasket(item.id)}>
                             <Icon name="cart-plus" size={20} color="#FFF" />
                             <ProductQuantity>{amount(item.id)}</ProductQuantity>
                             <ButtonText>ADICIONAR</ButtonText>

@@ -3,16 +3,10 @@ import produce from 'immer';
 export default function basket(state = [], action) {
     console.tron.log('MA OI', action);
     switch (action.type) {
-        case '@basket/ADD':
+        case '@basket/ADD_SUCCESS':
             return produce(state, draftProduct => {
-                const productIndex = draftProduct.findIndex(
-                    p => p.id === action.product.id
-                );
-                if (productIndex >= 0) {
-                    draftProduct[productIndex].amount += 1;
-                } else {
-                    draftProduct.push({ ...action.product, amount: 1 });
-                }
+                const { product } = action;
+                draftProduct.push(product);
             });
 
         case '@basket/REMOVE':
