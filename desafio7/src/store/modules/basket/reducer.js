@@ -19,21 +19,14 @@ export default function basket(state = [], action) {
                     draftProduct.splice(productIndex, 1);
                 }
             });
-        case '@basket/UPDATE_AMOUNT':
+        case '@basket/UPDATE_AMOUNT_SUCCESS':
             return produce(state, draftProduct => {
+                console.tron.log('le draft = ', draftProduct);
+                console.tron.log('le action', action);
                 const productIndex = draftProduct.findIndex(
                     p => p.id === action.id
                 );
-
-                if (productIndex >= 0) {
-                    if (Number(action.amount) <= 0) {
-                        draftProduct.splice(productIndex, 1);
-                    } else {
-                        draftProduct[productIndex].amount = Number(
-                            action.amount
-                        );
-                    }
-                }
+                draftProduct[productIndex].amount = Number(action.amount);
             });
 
         default:

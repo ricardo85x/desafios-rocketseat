@@ -54,9 +54,13 @@ export default function Basket() {
 
     const handleUpdate = (action, product) => {
         if (action === 'ADD') {
-            dispatch(CartActions.updateAmount(product.id, product.amount + 1));
+            dispatch(
+                CartActions.updateAmountRequest(product.id, product.amount + 1)
+            );
         } else {
-            dispatch(CartActions.updateAmount(product.id, product.amount - 1));
+            dispatch(
+                CartActions.updateAmountRequest(product.id, product.amount - 1)
+            );
         }
     };
 
