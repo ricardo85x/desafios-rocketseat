@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Keyboard, ActivityIndicator } from 'react-native';
+import { Keyboard, ActivityIndicator, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -63,6 +63,15 @@ export default class Main extends Component {
         const { users, newUser } = this.state;
 
         try {
+            Alert.alert(`/users/${newUser}`);
+
+            api.get(`/users/${newUser}`)
+                .then(response => {
+                    Alert.alert('tudo numa boa');
+                })
+                .catch(erro => {
+                    Alert.alert(erro);
+                });
             const response = await api.get(`/users/${newUser}`);
 
             if (response.data) {
