@@ -35,13 +35,13 @@ function projectExistsParam(req, res, next) {
 
 app.post('/projects', (req,res) => {
 
-    const { id, title } = req.body
+    const { id, title, tasks = [] } = req.body
     if ( id && title) {
         if (!projects.find(item => item.id == id)){
             projects.push({
                 id,
                 title,
-                tasks: []
+                tasks
             })
             return res.json(projects)
         } else {
@@ -88,6 +88,6 @@ app.post('/projects/:id/tasks', projectExistsParam, (req, res) => {
 })
 
 
-const port = 3211
+const port = 3221
 app.listen(port, () => console.log(`servidor rodando em http://localhost:${port}`))
 
