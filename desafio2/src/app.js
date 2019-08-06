@@ -1,11 +1,23 @@
 import 'dotenv/config';
-
 import express from 'express';
+import './database';
 
-const app = express();
+import routes from './routes';
 
-app.get('/teste', (req, res) => {
-  return res.json({ hello: 'mundo' });
-});
+class App {
+  constructor() {
+    this.server = express();
+    this.middlewares();
+    this.routes();
+  }
 
-export default app;
+  middlewares() {
+    this.server.use(express.json());
+  }
+
+  routes() {
+    this.server.use(routes);
+  }
+}
+
+export default new App().server;
