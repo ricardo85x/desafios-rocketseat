@@ -9,6 +9,10 @@ import {
 import Subscription from '../models/Subscription';
 import MeetUp from '../models/Meetup';
 
+import Queue from '../../lib/Queue';
+import SubscriptionMail from '../jobs/SubscriptionMail';
+import User from '../models/User';
+
 class SubscriptionController {
   async index(req, res) {
     const subscriptions = await Subscription.findAll({
@@ -78,7 +82,17 @@ class SubscriptionController {
       });
     }
 
-    return res.json({ status: 'vamos parar por aqui?' });
+    const user = await User.findByPk(req.userID);
+    const organizer = await User.findByPk(meetup.user_id);
+
+    const subscription = await Subscription.create({
+      meetup_id,
+      user_id: req.userID,
+    });
+
+    await Queue.add(SubscriptionMail.key, { meetup, user, organizer });
+
+    return res.json(subscription);
   }
 }
 
