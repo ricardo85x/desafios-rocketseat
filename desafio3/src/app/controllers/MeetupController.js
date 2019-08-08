@@ -1,185 +1,169 @@
 import * as Yup from 'yup';
-import {
-  startOfHour,
-  parseISO,
-  isBefore,
-  endOfHour,
-  format,
-  subHours,
-} from 'date-fns';
-import pt from 'date-fns/locale/pt-BR';
-import { Op } from 'sequelize';
+import { startOfHour, parseISO, isBefore } from 'date-fns';
 import Meetup from '../models/Meetup';
-import User from '../models/User';
 import File from '../models/File';
 
 class MeetupController {
   async index(req, res) {
-    /* const { page = 1 } = req.query;
-
     const meetups = await Meetup.findAll({
       where: {
         user_id: req.userID,
-        canceled_at: null,
       },
       order: ['date'],
-      attributes: ['id', 'date', 'past', 'cancelable'],
-      limit: 20,
-      offset: (page - 1) * 20, // pagina 1 = 1 a 20, pagina 2 = da pagina 2(conta ) ate +  20
-      include: [
-        {
-          model: User,
-          as: 'provider',
-          attributes: ['name', 'email', 'id'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['url', 'name', 'id', 'path'],
-            },
-          ],
-        },
-      ],
     });
 
-    */
-
-    return res.json({ status: 'em contrucao' });
+    return res.json(meetups);
   }
-  /*
+
   async store(req, res) {
     const schema = Yup.object().shape({
+      title: Yup.string().required(),
+      description: Yup.string().required(),
+      location: Yup.string().required(),
       date: Yup.date().required(),
-      provider_id: Yup.number().required(),
+      banner: Yup.number().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'validatation error' });
+    const validacao = await schema
+      .validate(req.body, { abortEarly: false })
+      .catch(err => Promise.resolve(err));
+
+    if (validacao.name === 'ValidationError') {
+      return res.status(400).json({
+        error: 'Erro na validação',
+        msg: validacao.errors,
+      });
     }
 
-    const { provider_id, date } = req.body;
+    const { title, description, location, date, banner } = req.body;
 
-
-    const is_provider = await User.findOne({
-      where: {
-        provider: true,
-        id: provider_id,
-      },
-    });
-
-    if (!is_provider) {
-      return res
-        .status(401)
-        .json({ error: 'You can only create appointment with a provider' });
-    }
-
-
-    // zera os minutos e segundos da hora ex: 10:31 vira 10:00
     const hourStart = startOfHour(parseISO(date));
-    const hourEnd = endOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
       return res.status(400).json({
         error:
-          'It is not possible to create appointment before current time or same hour as now',
+          'It is not possible to create meetup before current time or same hour as now',
       });
     }
 
+    // verifica se a imagem existe
+    const bannerExists = await File.findByPk(banner);
 
-    // const hourStart = startOfHour(parseISO(date));
-    // const hourEnd = endOfHour(parseISO(date));
-
-    const checkAvailability = await Appointment.findOne({
-      where: {
-        provider_id,
-        canceled_at: null,
-        date: {
-          [Op.between]: [hourStart, hourEnd],
-        },
-      },
-    });
-
-    if (checkAvailability) {
-      return res
-        .status(400)
-        .json({ error: 'Appointment data is not available' });
+    if (!bannerExists) {
+      return res.status(400).json({
+        error: 'banner id not found',
+      });
     }
 
-    const appointment = await Appointment.create({
+    const meetup = await Meetup.create({
       user_id: req.userID,
-      provider_id,
+      title,
+      description,
+      location,
+      file_id: banner,
       date,
     });
 
+    return res.json(meetup);
+  }
 
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      title: Yup.string(),
+      description: Yup.string(),
+      location: Yup.string(),
+      date: Yup.date(),
+      banner: Yup.number(),
+    });
 
-    const user = await User.findByPk(req.userID);
+    const validacao = await schema
+      .validate(req.body, { abortEarly: false })
+      .catch(err => Promise.resolve(err));
 
-    if (req.userID === provider_id) {
-      return res.status(401).json({
-        error: 'You cant create an appointment with yourself...',
+    if (validacao.name === 'ValidationError') {
+      return res.status(400).json({
+        error: 'Erro na validação',
+        msg: validacao.errors,
       });
     }
 
-    const formattedDate = format(
-      hourStart,
-      "'dia' dd 'de' MMMM', às' HH:mm'h'",
-      {
-        locale: pt,
-      }
-    );
-
-    await Notification.create({
-      content: `Novo agendamento de ${user.name} para o ${formattedDate}`,
-      user: provider_id,
+    const meetup = await Meetup.findOne({
+      where: {
+        id: req.params.id,
+        user_id: req.userID,
+      },
     });
 
-    return res.json(appointment);
+    if (!meetup) {
+      return res.status(400).json({
+        error: 'MeetUp not found or you are not the owner',
+      });
+    }
+
+    const { title, description, location, date, banner } = req.body;
+
+    if (title) {
+      meetup.title = title;
+    }
+    if (description) {
+      meetup.description = description;
+    }
+    if (location) {
+      meetup.location = location;
+    }
+    if (date) {
+      const hourStart = startOfHour(parseISO(date));
+
+      if (isBefore(hourStart, new Date())) {
+        return res.status(400).json({
+          error:
+            'It is not possible to update the meetup date before current time or same hour as now',
+        });
+      }
+
+      meetup.date = date;
+    }
+
+    if (banner) {
+      const bannerExists = await File.findByPk(banner);
+
+      if (!bannerExists) {
+        return res.status(400).json({
+          error: 'banner id not found',
+        });
+      }
+      meetup.file_id = banner;
+    }
+
+    await meetup.save();
+
+    return res.send(meetup);
   }
 
   async delete(req, res) {
-    const appointment = await Appointment.findByPk(req.params.id, {
-      include: [
-        {
-          model: User,
-          as: 'provider',
-          attributes: ['name', 'email'],
-        },
-        {
-          model: User,
-          as: 'user',
-          attributes: ['name'],
-        },
-      ],
+    const meetup = await Meetup.findOne({
+      where: {
+        user_id: req.userID,
+        id: req.params.id,
+      },
     });
 
-    if (!appointment) {
-      return res.status(400).json({ error: 'appointment not found' });
-    }
-
-    if (appointment.user_id !== req.userID) {
-      return res
-        .status(401)
-        .json({ error: 'appointment not found for this user' });
-    }
-
-    const dateWithSub = subHours(appointment.date, 2); // menos 2 horas
-
-    if (isBefore(dateWithSub, new Date())) {
-      return res.status(401).json({
-        error: 'you can only delete appointment that will begin after 2 hours',
+    if (!meetup) {
+      return res.status(400).json({
+        error: 'meetup not found',
       });
     }
-    appointment.canceled_at = new Date();
 
-    await appointment.save();
+    if (isBefore(new Date(meetup.date), new Date())) {
+      return res.status(400).json({
+        error: 'it is not possible to cancel past meetups',
+      });
+    }
 
-    await Queue.add(CancellationMail.key, { appointment });
+    await meetup.destroy();
 
-    return res.json(appointment);
+    return res.json({ status: 'ok' });
   }
-
-  */
 }
 
 export default new MeetupController();
