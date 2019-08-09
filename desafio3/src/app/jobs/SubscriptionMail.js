@@ -4,7 +4,6 @@ import Mail from '../../lib/Mail';
 
 class SubscriptionMail {
   get key() {
-    console.log('DEB 1');
     return 'SubscriptionMail';
   }
 

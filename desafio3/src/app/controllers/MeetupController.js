@@ -1,7 +1,16 @@
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore } from 'date-fns';
+import {
+  startOfHour,
+  parseISO,
+  isBefore,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
+import Sequelize from 'sequelize';
 import Meetup from '../models/Meetup';
+import Subscription from '../models/Subscription';
 import File from '../models/File';
+import User from '../models/User';
 
 class MeetupController {
   async index(req, res) {
@@ -10,6 +19,70 @@ class MeetupController {
         user_id: req.userID,
       },
       order: ['date'],
+    });
+
+    return res.json(meetups);
+  }
+
+  async indexUser(req, res) {
+    const dateStart = startOfHour(new Date());
+
+    const meetups = await Meetup.findAll({
+      order: [['date', 'asc']],
+      where: {
+        '$Subscriptions.user_id$': req.userID,
+        date: { [Sequelize.Op.gt]: dateStart },
+      },
+      include: [
+        {
+          model: Subscription,
+          require: true,
+          attributes: [],
+        },
+      ],
+    });
+
+    return res.json(meetups);
+  }
+
+  async indexFilter(req, res) {
+    const PERPAGE = 10;
+
+    const schema = Yup.object().shape({
+      date: Yup.date().required(),
+      page: Yup.number().required(),
+    });
+
+    const validacao = await schema
+      .validate(req.query, { abortEarly: false })
+      .catch(err => Promise.resolve(err));
+
+    if (validacao.name === 'ValidationError') {
+      return res.status(400).json({
+        error: 'Erro na validação',
+        msg: validacao.errors,
+      });
+    }
+
+    const { page = 1, date } = req.query;
+
+    const dateStart = startOfDay(parseISO(date));
+    const dateEnd = endOfDay(parseISO(date));
+
+    const meetups = await Meetup.findAll({
+      where: {
+        date: { [Sequelize.Op.between]: [dateStart, dateEnd] },
+      },
+      order: ['date'],
+      limit: PERPAGE,
+      offset: (page - 1) * PERPAGE,
+      include: [
+        {
+          model: User,
+          as: 'organizer',
+          attributes: ['name', 'email', 'id'],
+        },
+      ],
     });
 
     return res.json(meetups);
