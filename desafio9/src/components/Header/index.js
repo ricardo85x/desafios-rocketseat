@@ -20,7 +20,7 @@ export default function Header() {
     <Container>
       <Content>
         
-        <img src={logo} alt="MeetUp" />
+        <Link to="/dashboard" ><img src={logo} alt="MeetUp" /></Link>
         
 
         <aside>
