@@ -19,6 +19,13 @@ class MeetupController {
         user_id: req.userID,
       },
       order: ['date'],
+      include: [
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
+        },
+      ],
     });
 
     return res.json(meetups);
@@ -102,6 +109,8 @@ class MeetupController {
       .catch(err => Promise.resolve(err));
 
     if (validacao.name === 'ValidationError') {
+      console.log('error 1', validacao.errors);
+      console.log(req.body);
       return res.status(400).json({
         error: 'Erro na validação',
         msg: validacao.errors,
@@ -113,6 +122,8 @@ class MeetupController {
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
+      console.log('error 2');
+
       return res.status(400).json({
         error:
           'It is not possible to create meetup before current time or same hour as now',
@@ -123,6 +134,8 @@ class MeetupController {
     const bannerExists = await File.findByPk(banner);
 
     if (!bannerExists) {
+      console.log('error 3');
+
       return res.status(400).json({
         error: 'banner id not found',
       });
