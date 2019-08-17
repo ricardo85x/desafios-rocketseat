@@ -4,9 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Form, Input } from "@rocketseat/unform"
 import Logo from '~/assets/M.svg'
+import * as Yup from "yup";
+
 
 import { signInRequest } from "~/store/modules/auth/actions";
 
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .email("Insira um e-mail válido")
+    .required("campo email obrigatório"),
+  password: Yup.string()
+    .min(6)
+    .required("Campo email com no minimo 6 caracteres obrigatório")
+
+});
 
 export default function SignIn() {
     const dispatch = useDispatch();
@@ -18,7 +29,7 @@ export default function SignIn() {
     <>
       <div>
         <img src={Logo} alt="MeetUp" />
-        <Form onSubmit={handleSubmit}>
+        <Form schema={schema} onSubmit={handleSubmit}>
             <Input name="email" type="email" placeholder="Digite seu e-mail" />
             <Input name="password" type="password" placeholder="Sua senha secreta" />
             <button type="submit">{loading ? "Carregando" : "Entrar"} </button>

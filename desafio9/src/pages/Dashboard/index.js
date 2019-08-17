@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState}  from "react";
 import {useEffect} from 'react';
 import {MdChevronRight, MdAddCircleOutline} from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 
 import {Container, Content, Scroll} from './styles'
 import api from "~/services/api";
+import history from "~/services/history";
 export default function Dashboard() {
 
+  const [ meetups, setMeetups] = useState([])
   useEffect(() => {
 
     async function loadMeetups() {
 
       const response = await api.get('/meetups')
+
+      setMeetups(response.data)
 
       console.log(response)
     } 
@@ -20,6 +24,10 @@ export default function Dashboard() {
     loadMeetups();
 
   }, [])
+
+  function handleEditLink(id_meetup) {
+    history.push(`/info/${id_meetup}`)
+  }
 
   return (
     <Container>
@@ -32,22 +40,17 @@ export default function Dashboard() {
 
         <ul>
           <Scroll>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-          <li><strong>Meetup de React Native</strong><time>24 de junho, as 20h</time> <MdChevronRight /></li>
-         
 
+            { meetups.map( meetup => (
+
+              <li key={String(meetup.id)} onClick={() => handleEditLink(meetup.id)} >
+                <strong>{meetup.title}</strong>
+                <time>{meetup.date}</time> 
+                <MdChevronRight />
+              </li>
+
+            ))}
+          
           </Scroll>
          
 

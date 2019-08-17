@@ -12,7 +12,7 @@ import 'react-datetime/css/react-datetime.css'
 import {Container, ImageContainer} from './styles'
 import api from "~/services/api";
 
-import {createMeetupRequest} from '~/store/modules/meetup/actions'
+import {updateMeetupRequest} from '~/store/modules/meetup/actions'
 
 
 
@@ -28,35 +28,66 @@ const schema = Yup.object().shape({
   
 });
 
-export default function New() {
+export default function Edit({ match}) {
+
+  const [meetup, setMeetup] = useState(null)
+ 
+  useEffect(() => {
+    async function loadMeetup(id) {
+
+      const response = await api.get(`/meetups`)
+
+      const findMeetup = response.data.find(item => item.id === parseInt(id));
+
+      if (findMeetup){
+        setMeetup(findMeetup)
+      }
+
+      console.log(response.data)
+    }
+
+    loadMeetup(match.params.id)
+
+  }, [])
+
 
   const dispatch = useDispatch()
   function handleSubmit(data) {
       console.log(data);
-      dispatch(createMeetupRequest(data));
+      dispatch(updateMeetupRequest(data, match.params.id));
   }
 
   const [date, setDate] = useState(new Date())
 
-  let meetup = {}
+
 
   return (
     <Container>
       <Form schema={schema} name="preview_id" initialData={meetup} onSubmit={handleSubmit}>
 
-        <ImagePreviewInput id="banner" />
+        <ImagePreviewInput id="banner" meetup={meetup} />
+
 
         <Input name="title" placeholder="Titulo do Meeetup" />
         
-        <Input multiline  name="description" placeholder="Descrição do meetup" rows={6} />
+        <Input 
+          onChange={(e) => setMeetup({...meetup, description: e.target.value})} 
+          multiline  
+          name="description" 
+          placeholder="Descrição do meetup" 
+          value={meetup? meetup.description: ''} 
+          rows={6} 
+        />
 
         <Input name="date" placeholder="Data do meetup" />
+
+
 
         <Input name="location" placeholder="Localização" />
         <div>
           <div>
             <MdAddCircleOutline />
-            <button type="submit"> Salvar meetup</button>
+            <button type="submit"> Atualizar meetup</button>
 
           </div>
           

@@ -19,6 +19,13 @@ class MeetupController {
         user_id: req.userID,
       },
       order: ['date'],
+      include: [
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
+        },
+      ],
     });
 
     return res.json(meetups);
