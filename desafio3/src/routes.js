@@ -30,6 +30,7 @@ routes.post('/meetups', MeetUpController.store);
 routes.put('/meetups/:id', MeetUpController.update);
 
 routes.get('/meetups', MeetUpController.index);
+routes.get('/meetups-dates', MeetUpController.listDates);
 
 routes.get('/meetups-filter', MeetUpController.indexFilter);
 routes.get('/meetups-user', MeetUpController.indexUser);
@@ -37,5 +38,7 @@ routes.get('/meetups-user', MeetUpController.indexUser);
 routes.delete('/meetups/:id', MeetUpController.delete);
 
 routes.post('/subscriptions', SubscriptionController.store);
+
+routes.delete('/subscriptions/:meetup_id', SubscriptionController.delete);
 
 export default routes;

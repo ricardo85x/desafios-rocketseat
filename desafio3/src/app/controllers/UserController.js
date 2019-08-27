@@ -46,8 +46,10 @@ class UserController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
+      name: Yup.string().required('Nome é um campo obrigatório'),
+      email: Yup.string()
+        .email()
+        .required('Email é um campo obrigatório'),
       oldPassword: Yup.string().min(6),
       password: Yup.string()
         .min(6)
@@ -71,6 +73,13 @@ class UserController {
     }
 
     const { email, oldPassword } = req.body;
+
+    console.log('tirando a favela', validacao.name);
+    if (email === '') {
+      return res.status(400).json({ error: 'Email invalido' });
+    }
+
+    console.log('como assim', email === '');
 
     const user = await User.findByPk(req.userID);
 

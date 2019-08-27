@@ -20,7 +20,7 @@ import ImagePreviewInput from './ImagePreviewInput'
 
 const schema = Yup.object().shape({
 
-  preview_id: Yup.number().required('Escolha do banner é obrigatorio'),
+  banner: Yup.number().required('Escolha do banner é obrigatorio'),
   title: Yup.string().required('Titulo é obrigatório'),
   description: Yup.string().required('Descriçao é obrigatório'),
   date: Yup.date().required('Data é obrigatório'),
@@ -65,7 +65,7 @@ export default function Edit({ match}) {
     <Container>
       <Form schema={schema} name="preview_id" initialData={meetup} onSubmit={handleSubmit}>
 
-        <ImagePreviewInput id="banner" meetup={meetup} />
+        <ImagePreviewInput name="banner" id="banner" meetup={meetup} />
 
 
         <Input name="title" placeholder="Titulo do Meeetup" />
@@ -80,7 +80,6 @@ export default function Edit({ match}) {
         />
 
         <Input name="date" placeholder="Data do meetup" />
-
 
 
         <Input name="location" placeholder="Localização" />

@@ -1,10 +1,16 @@
 import styled from 'styled-components'
 import PerfectScrollBar from "react-perfect-scrollbar";
+import Datetime from 'react-datetime'
 
 import "react-toastify/dist/ReactToastify.css";
 import { darken, lighten } from 'polished';
 
+export const DatetimeElement = styled(Datetime)`
 
+    width: 100%;
+
+
+`
 
 export const Container = styled.div`
     max-width: 900px;
@@ -19,11 +25,18 @@ export const Container = styled.div`
 
 
 
+
     form {
         display: flex;
 
         flex-direction: column;
 
+
+        div.rdt input {
+            width: 100%;
+            
+        }
+            
 
         input[type='file'] {
             display: none;
@@ -41,8 +54,10 @@ export const Container = styled.div`
             display: flex;
             justify-content: flex-end;
             align-items: center;
+
+
             
-            div {
+            div:not(.rdtPicker,.rdt) {
                 
                 display: flex;
                 align-items: center;

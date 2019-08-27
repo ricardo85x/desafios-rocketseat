@@ -5,6 +5,7 @@ import {
   isBefore,
   startOfDay,
   endOfDay,
+  format,
 } from 'date-fns';
 import Sequelize from 'sequelize';
 import Meetup from '../models/Meetup';
@@ -31,6 +32,24 @@ class MeetupController {
     return res.json(meetups);
   }
 
+  async listDates(req, res) {
+    const dates = await Meetup.findAll({
+      order: ['date'],
+      attributes: ['date'],
+    });
+
+    const meetupsDate = [];
+
+    dates.forEach(date => {
+      const newDate = new Date(date.date);
+      newDate.setHours(0, 0, 0, 0);
+      if (meetupsDate.indexOf(newDate) < 0)
+        meetupsDate.push(format(newDate, 'yyyy-MM-dd'));
+    });
+
+    return res.json(meetupsDate);
+  }
+
   async indexUser(req, res) {
     const dateStart = startOfHour(new Date());
 
@@ -44,7 +63,17 @@ class MeetupController {
         {
           model: Subscription,
           require: true,
-          attributes: [],
+          attributes: ['id'],
+        },
+        {
+          model: User,
+          as: 'organizer',
+          attributes: ['name', 'email', 'id'],
+        },
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
         },
       ],
     });
@@ -88,6 +117,11 @@ class MeetupController {
           model: User,
           as: 'organizer',
           attributes: ['name', 'email', 'id'],
+        },
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
         },
       ],
     });

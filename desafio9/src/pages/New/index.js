@@ -7,9 +7,9 @@ import * as Yup from "yup";
 
 // import ReactDateTime from 'react-datetime'
 
-import 'react-datetime/css/react-datetime.css'
+// import 'react-datetime/css/react-datetime.css'
 
-import {Container, ImageContainer} from './styles'
+import {Container, DatetimeElement} from './styles'
 import api from "~/services/api";
 
 import {createMeetupRequest} from '~/store/modules/meetup/actions'
@@ -20,7 +20,7 @@ import ImagePreviewInput from './ImagePreviewInput'
 
 const schema = Yup.object().shape({
 
-  preview_id: Yup.number().required('Escolha do banner é obrigatorio'),
+  banner: Yup.number().required('Escolha do banner é obrigatorio'),
   title: Yup.string().required('Titulo é obrigatório'),
   description: Yup.string().required('Descriçao é obrigatório'),
   date: Yup.date().required('Data é obrigatório'),
@@ -40,26 +40,50 @@ export default function New() {
 
   let meetup = {}
 
+  const ref = useRef(null);
+  const { fieldName, registerField, defaultValue, error } = useField('mygood');
+  const [selected, setSelected] = useState(defaultValue);
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: ref.current,
+      path: 'value',
+      // clearValue: pickerRef => {
+      //   pickerRef.clear();
+      // },
+    });
+  }, [ref.current, fieldName]); // eslint-disable-line
+
+
   return (
     <Container>
-      <Form schema={schema} name="preview_id" initialData={meetup} onSubmit={handleSubmit}>
+      <Form schema={schema}  initialData={meetup} onSubmit={handleSubmit}>
 
-        <ImagePreviewInput id="banner" />
+        <ImagePreviewInput name="banner" id="banner" />
 
         <Input name="title" placeholder="Titulo do Meeetup" />
         
         <Input multiline  name="description" placeholder="Descrição do meetup" rows={6} />
 
-        <Input name="date" placeholder="Data do meetup" />
+        {/* <Input name="date" placeholder="Data do meetup" timeFormat="HH:MM" /> */}
+        
+        <DatetimeElement ref={ref}  
+         dateFormat="DD/MM/YYYY"   onChange={date => setSelected(date._d)}  isValidDate={(currentDate) => currentDate.isAfter(DatetimeElement.moment().subtract(2, 'day'))  } inputProps={{placeholder: 'Data do meetup', name: fieldName} } defaultValue="" locale="pt"/>
+
+        {error && <span>{error}</span>}
 
         <Input name="location" placeholder="Localização" />
         <div>
           <div>
             <MdAddCircleOutline />
-            <button type="submit"> Salvar meetup</button>
+            <button onClick={() => { console.log('clicando  debug', selected)}} type="submit"> Salvar meetup</button>
 
           </div>
           
+
+
+
 
         </div>
 

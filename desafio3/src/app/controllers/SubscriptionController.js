@@ -14,6 +14,24 @@ import SubscriptionMail from '../jobs/SubscriptionMail';
 import User from '../models/User';
 
 class SubscriptionController {
+  async delete(req, res) {
+    const subscription = await Subscription.findOne({
+      where: {
+        user_id: req.userID,
+      },
+    });
+
+    if (!subscription) {
+      return res.status(400).json({
+        error: `Inscrição não encontrada ${req.userID}`,
+      });
+    }
+
+    await subscription.destroy();
+
+    return res.json({ status: 'ok' });
+  }
+
   async index(req, res) {
     const subscriptions = await Subscription.findAll({
       where: {
@@ -47,19 +65,19 @@ class SubscriptionController {
 
     if (!meetup) {
       return res.status(400).json({
-        error: 'meetup not found',
+        error: 'Meetup não encontrado',
       });
     }
 
     if (meetup.user_id === req.userID) {
       return res.status(400).json({
-        error: 'you cant subscribe your own meetup',
+        error: 'Voce não pode se inscrever no seu proprio meetup',
       });
     }
 
     if (isBefore(new Date(meetup.date), new Date())) {
       return res.status(400).json({
-        error: 'it is not possible to subscribe past meetups',
+        error: 'Não é possivel se inscrever em meetups passados',
       });
     }
 
@@ -72,7 +90,7 @@ class SubscriptionController {
 
     if (subscriptionExists) {
       return res.status(400).json({
-        error: 'you are already subscribed to this meetup',
+        error: 'Voce ja esta neste meetup',
       });
     }
 
