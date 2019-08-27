@@ -6,7 +6,6 @@ export default function ImagePreviewInput() {
 
     // const { defaultValue, registerField } = useField("imagePreview");
     const { defaultValue, registerField } = useField("InputDateTime");
-    const [preview, setPreview] = useState(defaultValue ? defaultValue : new Date());
     const [date, setDate] = useState(defaultValue && defaultValue.id);
 
     const ref = useRef();
@@ -18,7 +17,7 @@ export default function ImagePreviewInput() {
             registerField({
                 name: "date",
                 ref: ref.current,
-                path: "value"
+                path: "dataset.date"
             });
         }
 
@@ -30,7 +29,7 @@ export default function ImagePreviewInput() {
 
     return (
 
-        <DatetimeElement ref={ref}   dateFormat="DD/MM/YYYY"   onChange={date => {setDate(date._d)  }}  isValidDate={(currentDate) => currentDate.isAfter(DatetimeElement.moment().subtract(2, 'day'))  } inputProps={{placeholder: 'Data do meetup', name: 'date'} } defaultValue="" locale="pt"/>
+        <DatetimeElement data-date={date} ref={ref}   dateFormat="DD/MM/YYYY"   onChange={date => {setDate(date._d)  }}  isValidDate={(currentDate) => currentDate.isAfter(DatetimeElement.moment().subtract(2, 'day'))  } inputProps={{placeholder: 'Data do meetup', name: 'date', dataset: ''} } defaultValue="" locale="pt"/>
 
         
                 // <input
