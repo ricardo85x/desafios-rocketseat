@@ -1,16 +1,6 @@
 import styled from 'styled-components'
-import PerfectScrollBar from "react-perfect-scrollbar";
-import Datetime from 'react-datetime'
 
 import "react-toastify/dist/ReactToastify.css";
-import { darken, lighten } from 'polished';
-
-export const DatetimeElement = styled(Datetime)`
-
-    width: 100%;
-
-
-`
 
 export const Container = styled.div`
     max-width: 900px;
@@ -22,22 +12,15 @@ export const Container = styled.div`
         margin-bottom: 10px;
     }
 
-
-
-
-
     form {
         display: flex;
-
         flex-direction: column;
-
 
         div.rdt input {
             width: 100%;
             
         }
             
-
         input[type='file'] {
             display: none;
         }
@@ -55,8 +38,6 @@ export const Container = styled.div`
             justify-content: flex-end;
             align-items: center;
 
-
-            
             div:not(.rdtPicker,.rdt) {
                 
                 display: flex;
@@ -85,45 +66,43 @@ export const Container = styled.div`
 
             }
 
-            
-
         }
     }
 `;
 
 
-export const ImageContainer = styled.div`
+// export const ImageContainer = styled.div`
 
-    display: flex;
-    align-items: center;
+//     display: flex;
+//     align-items: center;
 
-    justify-content: center;
-    flex-direction: column;
-    background: linear-gradient(-90deg, #22202C, #1a151f);
+//     justify-content: center;
+//     flex-direction: column;
+//     background: linear-gradient(-90deg, #22202C, #1a151f);
 
-    > img {
-        max-height: 260px;
-        max-width: 900px;
-        margin-bottom: 0px;
-    }
+//     > img {
+//         max-height: 260px;
+//         max-width: 900px;
+//         margin-bottom: 0px;
+//     }
 
-    min-height: 260px;
-    border-radius: 4px;
-    color: #666;
-    border: 1px solid #666;
+//     min-height: 260px;
+//     border-radius: 4px;
+//     color: #666;
+//     border: 1px solid #666;
 
-    cursor: pointer;
+//     cursor: pointer;
 
-    &:hover {
-        opacity: 0.70;
-    }
+//     &:hover {
+//         opacity: 0.70;
+//     }
 
-    svg {
-        color: #666;
-        size: 20px;
-    }
+//     svg {
+//         color: #666;
+//         size: 20px;
+//     }
 
-    strong { 
-        display: block;
-    }
-`
+//     strong { 
+//         display: block;
+//     }
+// `

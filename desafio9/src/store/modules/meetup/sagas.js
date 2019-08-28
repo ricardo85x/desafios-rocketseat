@@ -49,7 +49,7 @@ export function* createMeetup({ payload }) {
 
   } catch(e) {
     yield put(createMeetupFailure());
-    toast.error(`Erro ao criar o meetup`);
+    toast.error(`Erro ao criar o meetup, verifique todos os campos`);
     console.log(e)
     console.tron.error("ERRO!")
   }
