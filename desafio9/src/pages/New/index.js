@@ -56,8 +56,8 @@ export default function New() {
 
           <InputDateTime id="date" name="date" />
 
-        <Input name="location" placeholder="Localização" />
-        <div>
+          <Input name="location" placeholder="Localização" />
+        <div className="containerButton">
           <div>
             <MdAddCircleOutline />
             <button type="submit"> Salvar meetup</button>

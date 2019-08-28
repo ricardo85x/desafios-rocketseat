@@ -10,6 +10,8 @@ import * as Yup from "yup";
 import 'react-datetime/css/react-datetime.css'
 
 import {Container, ImageContainer} from './styles'
+import InputDateTime from './InputDateTime'
+
 import api from "~/services/api";
 
 import {updateMeetupRequest} from '~/store/modules/meetup/actions'
@@ -79,11 +81,13 @@ export default function Edit({ match}) {
           rows={6} 
         />
 
-        <Input name="date" placeholder="Data do meetup" />
+        {/* <Input name="date" placeholder="Data do meetup" /> */}
+        <InputDateTime  initialData={meetup && meetup.date}  id="date" name="date" />
+
 
 
         <Input name="location" placeholder="Localização" />
-        <div>
+        <div className="containerButton">
           <div>
             <MdAddCircleOutline />
             <button type="submit"> Atualizar meetup</button>

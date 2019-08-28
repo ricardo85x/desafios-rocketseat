@@ -2,7 +2,8 @@ import React, { useState}  from "react";
 import {useEffect} from 'react';
 import {MdChevronRight, MdAddCircleOutline} from 'react-icons/md'
 import { Link, Redirect } from 'react-router-dom'
-
+import { format } from 'date-fns'
+import pt from 'date-fns/locale/pt'
 
 import {Container, Content, Scroll} from './styles'
 import api from "~/services/api";
@@ -16,7 +17,10 @@ export default function Dashboard() {
 
       const response = await api.get('/meetups')
 
-      setMeetups(response.data)
+      setMeetups(response.data.map(item => ({
+        ...item,
+        dateFormated: format(item.date,"DD \\de  MMMM, à\\s HH\\h", { locale: pt})
+      })))
 
       console.log(response)
     } 
@@ -45,7 +49,7 @@ export default function Dashboard() {
 
               <li key={String(meetup.id)} onClick={() => handleEditLink(meetup.id)} >
                 <strong>{meetup.title}</strong>
-                <time>{meetup.date}</time> 
+                <time>{meetup.dateFormated}</time> 
                 <MdChevronRight />
               </li>
 

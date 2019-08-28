@@ -35,17 +35,24 @@ export function* createMeetup({ payload }) {
   try {
 
 
-    const response = yield call(api.post, '/meetups', payload.data)
+    // const response = yield call(api.post, '/meetups', payload.data)
 
-    toast.success("Meetup criado com sucesso");
+    api.post('/meetups', payload.data).then(response => {
+      toast.success("Meetup criado com sucesso");
 
-    console.tron.warn("DEBUG2", response)
+      console.tron.warn("DEBUG2", response)
+  
+  
+      put(createMeetupSuccess(response.data))
+  
+      history.push('/dashboard')
+  
+    }).catch(error => {
+      toast.error(`Erro ao criar o meetup,${error.response.data.error}`);
 
+    })
 
-    yield put(createMeetupSuccess(response.data))
-
-    history.push('/dashboard')
-
+  
 
   } catch(e) {
     yield put(createMeetupFailure());

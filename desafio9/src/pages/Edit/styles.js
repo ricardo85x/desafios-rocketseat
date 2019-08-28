@@ -24,6 +24,11 @@ export const Container = styled.div`
 
         flex-direction: column;
 
+        div.rdt input {
+            width: 100%;
+            
+        }
+
 
         input[type='file'] {
             display: none;
@@ -37,7 +42,7 @@ export const Container = styled.div`
             color: #9E9E9E;
         }
 
-        > div {
+        > div.containerButton {
             display: flex;
             justify-content: flex-end;
             align-items: center;

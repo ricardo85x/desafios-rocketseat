@@ -33,12 +33,12 @@ export const Container = styled.div`
             color: #9E9E9E;
         }
 
-        > div {
+        > div.containerButton {
             display: flex;
             justify-content: flex-end;
             align-items: center;
 
-            div:not(.rdtPicker,.rdt) {
+            div {
                 
                 display: flex;
                 align-items: center;

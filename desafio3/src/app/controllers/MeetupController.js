@@ -160,7 +160,7 @@ class MeetupController {
 
       return res.status(400).json({
         error:
-          'It is not possible to create meetup before current time or same hour as now',
+          'Não é possivel criar um meetup em uma data passada ou na mesma hora',
       });
     }
 
