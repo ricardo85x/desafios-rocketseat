@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import {TouchableOpacity} from 'react-native';
-import FastImage from 'react-native-fast-image'
+
 export const Container = styled.View`
     margin-bottom: 15px;
     /* padding: 20px; */
@@ -30,11 +30,9 @@ export const BannerContainer = styled.View`
 
 `
 
-// export const Banner = styled(FastImage)`
 export const Banner = styled.Image`
     width: 100%;
-    height: 250px;
-
+    height: 100%;
 
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;

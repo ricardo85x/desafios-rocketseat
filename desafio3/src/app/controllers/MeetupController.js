@@ -82,7 +82,7 @@ class MeetupController {
   }
 
   async indexFilter(req, res) {
-    const PERPAGE = 10;
+    const PERPAGE = 4;
 
     const schema = Yup.object().shape({
       date: Yup.date().required(),

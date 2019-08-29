@@ -3,7 +3,7 @@ import {parseISO, formatRelative} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Container, Banner, DetailContainer, Title,ButtonSubscribe, SubscribeText, ItemDatailContainer, ItemText} from './styles';
+import {Container, Banner,BannerContainer, DetailContainer, Title,ButtonSubscribe, SubscribeText,  ItemDatailContainer, ItemText} from './styles';
 
 export default function Meetup({data: {item: data }, onSubscribe}) {
     const dateParsed = useMemo(() => {
@@ -18,14 +18,14 @@ export default function Meetup({data: {item: data }, onSubscribe}) {
     return (
         <Container past={data.past}>
 
-          
-            <Banner source={{
-                    uri: data.banner
-                        ? data.banner.url.replace('localhost', '10.0.2.2')
-                        : `https://api.adorable.io/avatar/50/${data.title}.png`,
-                }} />
+            <BannerContainer>
+                <Banner source={{
+                        uri: data.banner
+                            ? data.banner.url.replace('localhost', '10.0.2.2')
+                            : `https://api.adorable.io/avatar/50/${data.title}.png`,
+                    }} />
 
-    
+            </BannerContainer>
 
             <DetailContainer>
                 <Title>{data.title}</Title>
