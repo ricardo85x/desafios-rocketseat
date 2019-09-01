@@ -34,7 +34,7 @@ export default function Profile() {
     const [name, setName] = useState(profile.name);
     const [email, setEmail] = useState(profile.email);
     const [password, setPassword] = useState('');
-    const [oldpassword, setOldPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export default function Profile() {
                 name,
                 email,
                 password,
-                oldpassword,
+                oldPassword,
                 confirmPassword,
             }),
         );
@@ -97,7 +97,7 @@ export default function Profile() {
                         ref={oldPasswordRef}
                         returnKeyType="next"
                         onSubmitEditing={() => passwordRef.current.focus()}
-                        value={oldpassword}
+                        value={oldPassword}
                         onChangeText={setOldPassword}
                     />
 

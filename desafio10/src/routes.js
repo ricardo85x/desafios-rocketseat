@@ -13,7 +13,6 @@ import Dashboard from '~/pages/Dashboard';
 import Subscriptions from '~/pages/Subscriptions';
 import Profile from '~/pages/Profile';
 
-
 export default (isSigned = false) =>
     createAppContainer(
         createSwitchNavigator(

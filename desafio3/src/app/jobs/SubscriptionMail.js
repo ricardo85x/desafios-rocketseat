@@ -8,7 +8,6 @@ class SubscriptionMail {
   }
 
   async handle({ data }) {
-    console.log('a fila executou!', data);
     const { meetup, user, organizer } = data;
     await Mail.sendMail({
       to: `${organizer.name} <${organizer.email}>`,

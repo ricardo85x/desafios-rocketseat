@@ -18,12 +18,10 @@ export function* signIn({ payload }) {
     api.defaults.headers.Authorization = `Bearer ${token}`;
     yield put(signInSuccess(token, user));
 
-    console.tron.log("papacapim");
-
     history.push("/dashboard");
   } catch (e) {
     yield put(signFailure());
-    toast.error("Falha na autenticação, verifique seus dados");
+    toast.error(e.response.data.error);
   }
 }
 
@@ -35,9 +33,7 @@ export function* signUp({ payload }) {
 
     history.push("/");
   } catch (e) {
-    toast.error("Falha no cadastro verifique seus dados");
-
-    console.tron.error(e)
+    toast.error(e.response.data.error);
 
     yield put(signFailure());
   }

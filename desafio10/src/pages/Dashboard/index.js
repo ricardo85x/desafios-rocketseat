@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useMemo} from 'react';
 import produce from 'immer';
-import {Alert, Button, Text} from 'react-native';
+import {Alert, Button, Text, Platform} from 'react-native';
+
 import {format, addDays, subDays} from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import {withNavigationFocus} from 'react-navigation';
@@ -41,7 +42,7 @@ function Dashboard({isFocused}) {
 
     function gravaMeetUp(dados) {}
 
-    useEffect(() => {
+        useEffect(() => {
         async function loadMeetups() {
             const response = await api.get('/meetups-filter', {
                 params: {
@@ -50,11 +51,11 @@ function Dashboard({isFocused}) {
                 },
             });
 
-            console.tron.warn('La vamos nos');
 
             if (response.data.length === 0) {
                 setEndPage(true);
             }
+
 
             const newData = response.data.map(item => ({
                 ...item,
@@ -64,51 +65,32 @@ function Dashboard({isFocused}) {
                     {locale: pt},
                 ),
                 pastMeetup: new Date() > new Date(item.date),
+                banner: { ...item.banner, url: Platform.OS === 'ios' ? item.banner.url : item.banner.url.replace('localhost', '10.0.2.2')  }
+
             }));
+
+
+
+            
 
             setMeetups(
                 produce(meetups, draft => {
                     draft.push(...newData);
                 }),
             );
-            // console.tron.warn(response.data.length === 0)
-            // console.tron.warn([...meetups, ...response.data])
 
-            // if(response.data.length === 0){
-            //     setEndPage(true)
-            // } else {
 
-            //     const updatedMeetup = [...meetups, ...response.data.reduce( (filtered, item) => {
-
-            //         if(meetups.find(e => e.id === item.id) === undefined) {
-            //             filtered.push({
-            //                 ...item,
-            //                 formattedDate: format(new Date(item.date), "dd 'de' MMMM, 'às' HH'h'", { locale: pt}),
-            //                 pastMeetup: (new Date()) > new Date(item.date)
-            //             })
-
-            //        }
-            //         return filtered
-            //     }, [] )  ]
-
-            //     if(meetups !== updatedMeetup) {
-            //         setMeetups(updatedMeetup)
-            //     }
-
-            // }
         }
-        // if (isFocused) {
+        
         loadMeetups();
-        // }
+        
     }, [date, page]);
 
 
     async function loadMore() {
-        console.tron.warn('Loading more ou nao');
-        console.tron.warn(endPage);
+     
         if (endPage == false) {
             setPage(page + 1);
-            // loadMeetups()
         }
     }
 
@@ -131,11 +113,9 @@ function Dashboard({isFocused}) {
             meetup_id,
         })
             .then(response => {
-                console.tron.warn(response.data);
                 Alert.alert('Voce se juntou ao meetup!', 'Parabens');
             })
             .catch(error => {
-                console.tron.error(error.response.data.error);
                 Alert.alert('Erro', error.response.data.error);
             });
     }
@@ -153,7 +133,9 @@ function Dashboard({isFocused}) {
                         <Icon name="chevron-right" size={20} color="#fff" />
                     </NextDateButton>
                 </DateContainer>
-                <Button onPress={loadMore} title="Debug2" />
+
+
+                {/* <Button onPress={loadMore} title="Debug2" /> */}
 
                 <List
                     data={meetups}

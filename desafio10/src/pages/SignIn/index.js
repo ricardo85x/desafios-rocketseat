@@ -7,8 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import logo from '~/assets/logo.png';
 
-// import Input from '~/components/Input';
-// import Button from '~/components/Button';
 import Background from '~/components/Background';
 
 import {signInRequest} from '~/store/modules/auth/actions';
@@ -46,7 +44,7 @@ export default function SignIn({navigation}) {
                         icon="mail-outline"
                         keyboardType="email-address"
                         autoCorrect={false}
-                        autoCaptalize="none"
+                        autoCapitalize="none"
                         placeholder="Digite seu email"
                         returnKeyType="next"
                         onSubmitEditing={() => passwordRef.current.focus()}

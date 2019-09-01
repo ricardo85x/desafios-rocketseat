@@ -143,8 +143,6 @@ class MeetupController {
       .catch(err => Promise.resolve(err));
 
     if (validacao.name === 'ValidationError') {
-      console.log('error 1', validacao.errors);
-      console.log(req.body);
       return res.status(400).json({
         error: 'Erro na validação',
         msg: validacao.errors,
@@ -156,8 +154,6 @@ class MeetupController {
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
-      console.log('error 2');
-
       return res.status(400).json({
         error:
           'Não é possivel criar um meetup em uma data passada ou na mesma hora',
@@ -168,8 +164,6 @@ class MeetupController {
     const bannerExists = await File.findByPk(banner);
 
     if (!bannerExists) {
-      console.log('error 3');
-
       return res.status(400).json({
         error: 'banner id not found',
       });
@@ -236,8 +230,13 @@ class MeetupController {
 
       if (isBefore(hourStart, new Date())) {
         return res.status(400).json({
-          error:
-            'It is not possible to update the meetup date before current time or same hour as now',
+          error: 'Não é possivel editar um meetup com uma data passada',
+        });
+      }
+
+      if (isBefore(meetup.date, new Date())) {
+        return res.status(400).json({
+          error: 'Não é possivel editar um meetup que ja ocorreu',
         });
       }
 
@@ -249,7 +248,7 @@ class MeetupController {
 
       if (!bannerExists) {
         return res.status(400).json({
-          error: 'banner id not found',
+          error: 'banner não encontrado',
         });
       }
       meetup.file_id = banner;
@@ -270,13 +269,13 @@ class MeetupController {
 
     if (!meetup) {
       return res.status(400).json({
-        error: 'meetup not found',
+        error: 'meetup não encontrado',
       });
     }
 
     if (isBefore(new Date(meetup.date), new Date())) {
       return res.status(400).json({
-        error: 'it is not possible to cancel past meetups',
+        error: 'não é possivel cancelar meetups que ja ocorreram',
       });
     }
 

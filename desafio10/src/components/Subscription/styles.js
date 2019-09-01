@@ -32,8 +32,9 @@ export const BannerContainer = styled.View`
 `
 
 export const Banner = styled.Image`
+ 
     width: 100%;
-    height: 100%;
+    height: 250px;
 
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;

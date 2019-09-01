@@ -30,11 +30,11 @@ class SessionController {
     });
 
     if (!user) {
-      return res.status(401).json({ error: 'User not found' });
+      return res.status(401).json({ error: 'Usuario não encontrado' });
     }
 
     if (!(await user.checkPassword(password))) {
-      return res.status(401).json({ error: 'wrong password' });
+      return res.status(401).json({ error: 'Senha invalida' });
     }
 
     const { id, name } = user;

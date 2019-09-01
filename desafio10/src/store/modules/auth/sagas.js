@@ -1,8 +1,6 @@
 import {takeLatest, call, put, all, delay} from 'redux-saga/effects';
-// import {toast} from 'react-toastify';
 import {Alert} from 'react-native';
 
-// import history from '~/services/history';
 import api from '~/services/api';
 
 import {signInSuccess, signFailure} from './actions';
@@ -21,14 +19,15 @@ export function* signIn({payload}) {
         yield delay(3);
         yield put(signInSuccess(token, user));
 
-        console.tron.log('papacapim');
 
         // history.push('/dashboard');
     } catch (e) {
         yield put(signFailure());
-        Alert.alert('Falha na autenticação', 'verifique seus dados');
+        // Alert.alert('Falha na autenticação', 'verifique seus dados');
+        Alert.alert('Falha na autenticação', e.response.data.error);
     }
 }
+
 
 export function* signUp({payload}) {
     try {
@@ -40,9 +39,10 @@ export function* signUp({payload}) {
             password,
         });
 
-        // history.push('/');
+        Alert.alert('Usuario criado com sucesso ', 'Faça o login');
+
     } catch (e) {
-        Alert.alert('Falha no cadastro ', 'Verifique seus dados');
+        Alert.alert('Falha no cadastro ', e.response.data.error);
 
         yield put(signFailure());
     }
@@ -58,14 +58,8 @@ export function setToken({payload}) {
     }
 }
 
-// export function signOut() {
-//     // history.push('/');
-// }
-
 export default all([
     takeLatest('persist/REHYDRATE', setToken),
     takeLatest('@auth/SIGN_IN_REQUEST', signIn),
-
     takeLatest('@auth/SIGN_UP_REQUEST', signUp),
-    // takeLatest('@auth/SIGN_OUT', signOut),
 ]);

@@ -5,7 +5,12 @@ import {
   // parseISO,
   isBefore,
   isSameHour,
+  format,
 } from 'date-fns';
+import pt from 'date-fns/locale/pt';
+
+import Sequelize from 'sequelize';
+
 import Subscription from '../models/Subscription';
 import MeetUp from '../models/Meetup';
 
@@ -61,7 +66,9 @@ class SubscriptionController {
 
     const { meetup_id } = req.body;
 
-    const meetup = await MeetUp.findByPk(meetup_id);
+    const meetup = await MeetUp.findByPk(meetup_id, {
+      raw: true,
+    });
 
     if (!meetup) {
       return res.status(400).json({
@@ -94,9 +101,39 @@ class SubscriptionController {
       });
     }
 
+    const myMeetUps = await Subscription.findAll({
+      where: {
+        user_id: req.userID,
+      },
+      include: [
+        {
+          model: MeetUp,
+          as: 'meetup',
+          attributes: ['id', 'date'],
+          where: {
+            date: {
+              [Sequelize.Op.gte]: Sequelize.literal('NOW()'),
+              [Sequelize.Op.lte]: new Date(meetup.date),
+            },
+          },
+        },
+      ],
+    });
+
+    const sameHour = myMeetUps.find(item =>
+      isSameHour(new Date(item.meetup.date), new Date(meetup.date))
+    );
+
+    if (sameHour) {
+      return res.status(400).json({
+        error:
+          'Ops, Parece que voce ja tem um meetup agendado neste mesmo horario..',
+      });
+    }
+
     if (isSameHour(new Date(meetup.date), new Date())) {
       return res.status(400).json({
-        error: 'na mesma hora',
+        error: 'Ops, Este meetup vai comecar em menos de 1 hora, tente outro.',
       });
     }
 
@@ -108,7 +145,18 @@ class SubscriptionController {
       user_id: req.userID,
     });
 
-    await Queue.add(SubscriptionMail.key, { meetup, user, organizer });
+    await Queue.add(SubscriptionMail.key, {
+      meetup: {
+        ...meetup,
+        formatedDate: format(
+          new Date(meetup.date),
+          "'dia ' dd 'de' MMMM  'as' HH'h'",
+          { locale: pt }
+        ),
+      },
+      user,
+      organizer,
+    });
 
     return res.json(subscription);
   }
