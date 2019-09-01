@@ -7,6 +7,7 @@ import api from '~/services/api'
 import { ImageContainer } from './styles'
 export default function ImagePreviewInput() {
 
+    // const { defaultValue, registerField } = useField("imagePreview");
     const { defaultValue, registerField } = useField("imagePreview");
     const [preview, setPreview] = useState(defaultValue ? defaultValue.url : null);
     const [file, setFile] = useState(defaultValue && defaultValue.id);
@@ -39,11 +40,13 @@ export default function ImagePreviewInput() {
     }
     return (
         
-            <label htmlFor="imagePreview">
+            <label htmlFor="input_preview">
                 <input
                     type="file"
-                    id="imagePreview"
+                    id="input_preview"
+                    name="input_preview"
                     accept="image/*"
+                    data-batata={file}
                     data-file={file}
                     onChange={handleChange}
                     ref={ref}

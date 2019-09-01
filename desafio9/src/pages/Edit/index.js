@@ -10,6 +10,8 @@ import * as Yup from "yup";
 import 'react-datetime/css/react-datetime.css'
 
 import {Container, ImageContainer} from './styles'
+import InputDateTime from './InputDateTime'
+
 import api from "~/services/api";
 
 import {updateMeetupRequest} from '~/store/modules/meetup/actions'
@@ -20,7 +22,7 @@ import ImagePreviewInput from './ImagePreviewInput'
 
 const schema = Yup.object().shape({
 
-  preview_id: Yup.number().required('Escolha do banner é obrigatorio'),
+  banner: Yup.number().required('Escolha do banner é obrigatorio'),
   title: Yup.string().required('Titulo é obrigatório'),
   description: Yup.string().required('Descriçao é obrigatório'),
   date: Yup.date().required('Data é obrigatório'),
@@ -65,7 +67,7 @@ export default function Edit({ match}) {
     <Container>
       <Form schema={schema} name="preview_id" initialData={meetup} onSubmit={handleSubmit}>
 
-        <ImagePreviewInput id="banner" meetup={meetup} />
+        <ImagePreviewInput name="banner" id="banner" meetup={meetup} />
 
 
         <Input name="title" placeholder="Titulo do Meeetup" />
@@ -79,12 +81,13 @@ export default function Edit({ match}) {
           rows={6} 
         />
 
-        <Input name="date" placeholder="Data do meetup" />
+        {/* <Input name="date" placeholder="Data do meetup" /> */}
+        <InputDateTime  initialData={meetup && meetup.date}  id="date" name="date" />
 
 
 
         <Input name="location" placeholder="Localização" />
-        <div>
+        <div className="containerButton">
           <div>
             <MdAddCircleOutline />
             <button type="submit"> Atualizar meetup</button>

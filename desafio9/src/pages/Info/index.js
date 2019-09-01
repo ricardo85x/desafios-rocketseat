@@ -4,7 +4,8 @@ import {MdPlace, MdAddCircleOutline, MdEvent, MdDeleteForever} from 'react-icons
 import { Link } from 'react-router-dom'
 import { useDispatch  } from 'react-redux'
 import { deleteMeetupRequest} from '~/store/modules/meetup/actions'
-
+import { format } from 'date-fns'
+import pt from 'date-fns/locale/pt'
 
 import {Container, Content, Description, BoxImage, DateLocationContainer} from './styles'
 import api from "~/services/api";
@@ -55,7 +56,7 @@ export default function Dashboard({match}) {
 
             <div>
               <MdEvent size={13} color="#CBCBCB99" />
-              <span>{meetup.date}</span>
+              <span>{ format(meetup.date,"DD \\de  MMMM, à\\s  HH\\h", { locale: pt})}</span>
             </div>
 
             <div>

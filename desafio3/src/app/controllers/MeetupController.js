@@ -5,6 +5,7 @@ import {
   isBefore,
   startOfDay,
   endOfDay,
+  format,
 } from 'date-fns';
 import Sequelize from 'sequelize';
 import Meetup from '../models/Meetup';
@@ -31,6 +32,24 @@ class MeetupController {
     return res.json(meetups);
   }
 
+  async listDates(req, res) {
+    const dates = await Meetup.findAll({
+      order: ['date'],
+      attributes: ['date'],
+    });
+
+    const meetupsDate = [];
+
+    dates.forEach(date => {
+      const newDate = new Date(date.date);
+      newDate.setHours(0, 0, 0, 0);
+      if (meetupsDate.indexOf(newDate) < 0)
+        meetupsDate.push(format(newDate, 'yyyy-MM-dd'));
+    });
+
+    return res.json(meetupsDate);
+  }
+
   async indexUser(req, res) {
     const dateStart = startOfHour(new Date());
 
@@ -44,7 +63,17 @@ class MeetupController {
         {
           model: Subscription,
           require: true,
-          attributes: [],
+          attributes: ['id'],
+        },
+        {
+          model: User,
+          as: 'organizer',
+          attributes: ['name', 'email', 'id'],
+        },
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
         },
       ],
     });
@@ -53,7 +82,7 @@ class MeetupController {
   }
 
   async indexFilter(req, res) {
-    const PERPAGE = 10;
+    const PERPAGE = 4;
 
     const schema = Yup.object().shape({
       date: Yup.date().required(),
@@ -89,6 +118,11 @@ class MeetupController {
           as: 'organizer',
           attributes: ['name', 'email', 'id'],
         },
+        {
+          model: File,
+          as: 'banner',
+          attributes: ['id', 'url', 'name', 'path'],
+        },
       ],
     });
 
@@ -109,8 +143,6 @@ class MeetupController {
       .catch(err => Promise.resolve(err));
 
     if (validacao.name === 'ValidationError') {
-      console.log('error 1', validacao.errors);
-      console.log(req.body);
       return res.status(400).json({
         error: 'Erro na validação',
         msg: validacao.errors,
@@ -122,11 +154,9 @@ class MeetupController {
     const hourStart = startOfHour(parseISO(date));
 
     if (isBefore(hourStart, new Date())) {
-      console.log('error 2');
-
       return res.status(400).json({
         error:
-          'It is not possible to create meetup before current time or same hour as now',
+          'Não é possivel criar um meetup em uma data passada ou na mesma hora',
       });
     }
 
@@ -134,8 +164,6 @@ class MeetupController {
     const bannerExists = await File.findByPk(banner);
 
     if (!bannerExists) {
-      console.log('error 3');
-
       return res.status(400).json({
         error: 'banner id not found',
       });
@@ -202,8 +230,13 @@ class MeetupController {
 
       if (isBefore(hourStart, new Date())) {
         return res.status(400).json({
-          error:
-            'It is not possible to update the meetup date before current time or same hour as now',
+          error: 'Não é possivel editar um meetup com uma data passada',
+        });
+      }
+
+      if (isBefore(meetup.date, new Date())) {
+        return res.status(400).json({
+          error: 'Não é possivel editar um meetup que ja ocorreu',
         });
       }
 
@@ -215,7 +248,7 @@ class MeetupController {
 
       if (!bannerExists) {
         return res.status(400).json({
-          error: 'banner id not found',
+          error: 'banner não encontrado',
         });
       }
       meetup.file_id = banner;
@@ -236,13 +269,13 @@ class MeetupController {
 
     if (!meetup) {
       return res.status(400).json({
-        error: 'meetup not found',
+        error: 'meetup não encontrado',
       });
     }
 
     if (isBefore(new Date(meetup.date), new Date())) {
       return res.status(400).json({
-        error: 'it is not possible to cancel past meetups',
+        error: 'não é possivel cancelar meetups que ja ocorreram',
       });
     }
 
