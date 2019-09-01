@@ -1,5 +1,5 @@
 # Caso de algum erro de keystore no android simulator.
-rode o seguinte comand:
+rode o seguinte comando:
 
 cd android/app
 
