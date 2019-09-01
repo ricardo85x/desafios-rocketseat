@@ -24,14 +24,9 @@ export const Container = styled.View`
 
 export const Logo = styled.Image`
 
-    
-    ${Platform.select({ 
-      ios: css`
-        margin-right: 35px`, 
-      android: css`
-        margin-right: inherit` 
-   })};
-
+	
+    ${Platform.os === 'ios' && css`margin-right: 35px`}
+ 
     height: 25px;
     width: 25px;
 
